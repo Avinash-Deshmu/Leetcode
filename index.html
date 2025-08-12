@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Avinash Deshmukh's LeetCode Activity</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+    .stats { margin-top: 2em; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Avinash Deshmukh's LeetCode Activity</h1>
+    <p>This page automatically updates to show your latest LeetCode stats.</p>
+    <div id="stats" class="stats">Loading your stats...</div>
+  </div>
+  <script>
+    async function fetchLeetCodeStats(username) {
+      const url = `https://leetcode-stats-api.herokuapp.com/${username}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("API request failed");
+        const data = await response.json();
+        if (data.status === 'error') throw new Error(data.message || "User not found");
+        document.getElementById('stats').innerHTML = `
+          <ul>
+            <li><strong>Total Solved:</strong> ${data.totalSolved}</li>
+            <li><strong>Easy:</strong> ${data.easySolved} / ${data.totalEasy}</li>
+            <li><strong>Medium:</strong> ${data.mediumSolved} / ${data.totalMedium}</li>
+            <li><strong>Hard:</strong> ${data.hardSolved} / ${data.totalHard}</li>
+            <li><strong>Ranking:</strong> ${data.ranking}</li>
+            <li><strong>Contribution Points:</strong> ${data.contributionPoints}</li>
+          </ul>
+          <p>Last updated: ${new Date().toLocaleString()}</p>
+        `;
+      } catch (e) {
+        document.getElementById('stats').innerHTML = `<p class="error">Failed to fetch stats: ${e.message}</p>`;
+      }
+    }
+    fetchLeetCodeStats('AvinashDeshmukh');
+  </script>
+</body>
+</html>
